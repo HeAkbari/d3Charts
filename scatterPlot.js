@@ -64,8 +64,7 @@ async function drawScatter() {
         .attr("fill", (d) => colorScale(colorAccessor(d)))
         .on("mousemove",d=>{
             console.log(d,[d.path[0].__data__.dewPoint,d.path[0].__data__.humidity])
-        })
-
+        }) ;
     const xAxiseGenerator = d3.axisBottom()
         .scale(xScales)
     const yAxiseGenerator = d3.axisLeft()
