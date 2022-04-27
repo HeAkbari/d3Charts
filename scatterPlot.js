@@ -50,7 +50,9 @@ async function drawScatter() {
 
     const colorScale = d3.scaleLinear()
         .domain(d3.extent(dataset, colorAccessor))
-        .range(["yellow", "red"])
+        .range(["yellow", "green"])
+
+
 
     const dots = bounds.selectAll("circle")
         .data(dataset)
@@ -59,7 +61,10 @@ async function drawScatter() {
         .attr("cx", d => xScales(xAccessor(d)))
         .attr("cy", d => yScales(yAccessor(d)))
         .attr("r", d => xScales(xAccessor(d)) / 50)
-        .attr("fill", d => colorScale(colorAccessor(d)))
+        .attr("fill", (d) => colorScale(colorAccessor(d)))
+        .on("mousemove",d=>{
+            console.log(d,[d.path[0].__data__.dewPoint,d.path[0].__data__.humidity])
+        })
 
     const xAxiseGenerator = d3.axisBottom()
         .scale(xScales)
@@ -74,7 +79,6 @@ const xAxis=bounds.append("g")
 
     const yAxis=bounds.append("g")
     .call(yAxiseGenerator)
-
 }
 
 drawScatter();
