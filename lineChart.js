@@ -1,7 +1,7 @@
 
-async function getWeather() {
-    const dataset = await d3.json("./my_weather_data.json");
-    console.log(dataset[0])
+async function drawChart() {
+    const data = await d3.json("./my_weather_data.json");
+    var dataset = data.slice(0, 100)
     const dateParser = d3.timeParse("%Y-%m-%d")
     const yAccessor = d => d.temperatureMax
     const xAccessor = d => dateParser(d.date)
@@ -41,7 +41,7 @@ async function getWeather() {
         .style("transform",
             `translate( ${dimensions.margin.left}px,
             ${dimensions.margin.top}px)`)
-       // .attr("clip-path", "url(#clip)");
+    // .attr("clip-path", "url(#clip)");
 
     const grad = defs
         .append('linearGradient')
@@ -52,7 +52,7 @@ async function getWeather() {
         .attr('y2', '100%')
         .attr("gradientTransform", "rotate(-45)")
 
-   var colors = [['rgb(70,130,180)', '1'], ['rgb(70,130,180)', '0.7'], ['rgb(70,130,180)', '0.4'], ['rgb(70,130,180)', '0']];
+    var colors = [['rgb(70,130,180)', '1'], ['rgb(70,130,180)', '0.7'], ['rgb(70,130,180)', '0.4'], ['rgb(70,130,180)', '0']];
 
     grad.selectAll('stop')
         .data(colors)
@@ -62,7 +62,7 @@ async function getWeather() {
         .style('stop-opacity', function (d) { return d[1]; })
         .attr('offset', function (d, i) {
             return 100 * (i / (colors.length - 1)) + '%';
-        })
+        });
     //#endregion
 
     var yScale = d3.scaleLinear()
@@ -104,7 +104,7 @@ async function getWeather() {
     bounds.append("path")
         .attr("class", "area")
         .attr("d", area(dataset))
-        .attr("fill", "url(#grad")
+        .attr("fill", "url(#grad)")
 
     // Transition
     const totalLength = path.node().getTotalLength();
@@ -119,14 +119,16 @@ async function getWeather() {
         .attr("stroke-dashoffset", 0);
 
     var yAxis = bounds.append("g")
-        .style("transform", `translateX(${dimensions.margin.right-5
+        .attr("class", "graph-axis axis--y")
+        .style("transform", `translateX(${dimensions.margin.right - 5
             }px)`)
+
         .call(d3.axisLeft().scale(yScale))
 
 
 
     var gX = bounds.append("g")
-        .attr("class", "axis axis--x")
+        .attr("class", "graph-axis axis--x")
         .style("transform", `translateY(${dimensions.boundedHeight
             }px)`);
 
@@ -229,4 +231,4 @@ async function getWeather() {
         })
         .call(zoom);
 }
-getWeather();
+drawChart();
